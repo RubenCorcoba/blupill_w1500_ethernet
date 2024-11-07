@@ -8,6 +8,7 @@ uint8_t spi_buffer[LEN_BUFFER_SPI];    // Buffer de SPI
 
 void ADC_DMA_Init(void);
 void Ethernet_Init(void);
+static void transmite(void);
 
 static EthernetClient client;
 
@@ -16,12 +17,18 @@ static volatile bool transmitir = false;
 extern "C" void DMA1_Channel1_IRQHandler(void);
 
 void setup(void) {
-
     ADC_DMA_Init();
     Ethernet_Init();
+    transmitir = true;
+    transmite();
 }
 
 void loop(void){
+    transmite();
+}
+
+static void transmite(void)
+{
     static byte ip_servidor[4]={192,168,1,120};
     if (transmitir){
         if(client.connect(ip_servidor,4000)){
@@ -64,7 +71,7 @@ void DMA1_Channel1_IRQHandler(void) {
         DMA1->IFCR |= DMA_IFCR_CTCIF1;
         if (!transmitir){
             // Copia los datos del buffer de ADC al buffer de SPI
-            for (int i = 0; i < 16; i++) {
+            for (int i = 0; i < LEN_BUFFER_ADC; i++) {
                 spi_buffer[i * 2] = adc_buffer[i] >> 8;
                 spi_buffer[i * 2 + 1] = adc_buffer[i] & 0xFF;
             }
