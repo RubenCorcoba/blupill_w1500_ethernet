@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Ethernet.h>  // poner libreria para el w1500
 constexpr int LEN_BUFFER_ADC = 16;
-constexpr int LEN_BUFFER_SPI = LEN_BUFFER_ADC/2;
+constexpr int LEN_BUFFER_SPI = LEN_BUFFER_ADC * 2;
 // Define buffers and variables
 uint16_t adc_buffer[LEN_BUFFER_ADC];   // Buffer de ADC
 uint8_t spi_buffer[LEN_BUFFER_SPI];    // Buffer de SPI
