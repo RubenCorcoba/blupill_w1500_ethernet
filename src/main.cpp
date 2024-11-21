@@ -77,12 +77,18 @@ void ADC_DMA_Init(void) {
     DMA1_Channel1->CPAR = (uint32_t)&ADC1->DR; // Dirección periférica: registro de datos del ADC1
     DMA1_Channel1->CMAR = (uint32_t)adc_buffer; // Dirección de memoria: buffer de ADC
     DMA1_Channel1->CNDTR = LEN_BUFFER_ADC;  // Número de datos a transferir
-    DMA1_Channel1->CCR = DMA_CCR_MINC | DMA_CCR_CIRC | DMA_CCR_TCIE | DMA_CCR_EN;  
-                                           
+    DMA1_Channel1->CCR = DMA_CCR_MINC | DMA_CCR_CIRC | DMA_CCR_TCIE | DMA_CCR_EN | DMA_CCR_MSIZE_0 | DMA_CCR_PSIZE_0;  // Configuración del canal DMA:
+                         // MINC: Incremento automático de la dirección de memoria
+                                        // CIRC: Modo circular
+                                                        // TCIE: Interrupción de transferencia completa
+                                                                         // EN: Habilitar canal
+                                                                                    // bit 0 de MSIZE en 1, para escribir 16 bit
+                                                                                                        // bit 0 de PSIZE en 1, para leer 16 bit
 
     // Habilita la interrupción DMA1 Channel 1
     NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 }
+
 
 void Ethernet_Init(void) {
     // Inicializa el W5100
